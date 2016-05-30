@@ -1,6 +1,7 @@
 This is a Java GUI project, which includes:
 	* Many swing basic components: JFrame, JPanel, JButton, JTextField, JTextArea and so on.
-	* RXTXcomm library. Using two serial port to make a connection with my sensors, sending commands to them and get data from them.
+	* RXTXcomm library. Using two serial port to make a connection with my sensors, sending commands 
+	to them and get data from them.
 	* jfreechart, jcommon libraries. Using a XYLineChart to display the data from each serial port.
 		! Display the data dynamically by changing the chart's Dataset.
 		! Use Crosshair component to represent the data chosen by user while processing the data.
