@@ -4,11 +4,17 @@
 package data;
 
 /**
+ * DataProcess类为数据处理基本算法
  * @author heyuyi
  *
  */
 public class DataProcess {
 
+	/**
+	 * Pair类表示数据点
+	 * @author heyuyi
+	 *
+	 */
 	public static class Pair {
 		public double x = 0;
 		public double y = 0;
@@ -17,6 +23,11 @@ public class DataProcess {
 		}
 	}
 	
+	/**
+	 * 最小二乘法直线拟合
+	 * @param l 数据集
+	 * @return 拟合结果
+	 */
 	public static Pair calcLMS(Pair[] l) {
 		double sumx = 0, sumy = 0, sumxy = 0, sumxx = 0;
 		int n = l.length;
@@ -32,6 +43,11 @@ public class DataProcess {
 		return r;
 	}
 	
+	/**
+	 * 配平所需计算，两组数据点分别直线拟合，然后计算他们之间的差
+	 * @param l1，l2 数据集
+	 * @return 计算结果
+	 */
 	public static double calcDelta(Pair[] l1, Pair[] l2) {
 		Pair r1 = calcLMS(l1);
 		Pair r2 = calcLMS(l2);

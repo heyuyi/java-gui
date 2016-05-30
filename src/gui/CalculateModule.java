@@ -29,11 +29,15 @@ import javax.swing.border.TitledBorder;
 import data.DataProcess;
 
 /**
+ * CalculateModule类为数据计算模块，包含三个基本功能
  * @author heyuyi
  *
  */
 class CalculateModule {
 
+	/**
+	 * CalculateModule类成员
+	 */
 	TextPanel textPanel = new TextPanel();
 	CalcPanel1 calcPanel1 = new CalcPanel1();
 	CalcPanel2 calcPanel2 = new CalcPanel2();
@@ -42,13 +46,14 @@ class CalculateModule {
 			rox = 15.5, roz = 37.3, rrx = 47, rry = 47, theta = 30;
 	
 	/**
+	 * CalcPanel1类为内外框配平功能
 	 * @author heyuyi
 	 *
 	 */
 	class CalcPanel1 extends JPanel {
 
 		/**
-		 * 
+		 * CalcPanel1类成员
 		 */
 		private static final long serialVersionUID = 1L;
 		private double Fix = 0, Fox = 0, Fiy = 0, Foy = 0;
@@ -63,7 +68,7 @@ class CalculateModule {
 		private JButton calcBtn = new JButton("计算");
 		
 		/**
-		 * 
+		 * CalcPanel1类构造函数
 		 */
 		public CalcPanel1() {
 			super();
@@ -305,13 +310,14 @@ class CalculateModule {
 	}
 	
 	/**
+	 * CalcPanel2为消旋配平功能
 	 * @author heyuyi
 	 *
 	 */
 	class CalcPanel2 extends JPanel {
 
 		/**
-		 * 
+		 * CalcPanel2类成员
 		 */
 		private static final long serialVersionUID = 1L;
 		private double Frx = 0, Fry = 0;
@@ -322,7 +328,7 @@ class CalculateModule {
 		private JButton calcBtn = new JButton("计算");
 		
 		/**
-		 * 
+		 * CalcPanel2类构造函数
 		 */
 		public CalcPanel2() {
 			super();
@@ -465,17 +471,21 @@ class CalculateModule {
 	}
 	
 	/**
+	 * TextPanel类为计算结果文本显示功能
 	 * @author heyuyi
 	 *
 	 */
 	class TextPanel extends JPanel {
 
 		/**
-		 * 
+		 * TextPanel类成员
 		 */
 		private static final long serialVersionUID = 1L;
 		private JTextArea tArea = new JTextArea();
 		
+		/**
+		 * TextPanel类构造函数
+		 */
 		public TextPanel() {
 			super();
 			TitledBorder tb = BorderFactory.createTitledBorder("状态显示");
@@ -505,15 +515,27 @@ class CalculateModule {
 		}
 	}
 	
+	/**
+	 * CalculateModule类构造函数
+	 * @param x,y DisplayModule模块的引用
+	 */
 	public CalculateModule(DisplayModule x, DisplayModule y) {
 		dx = x;
 		dy = y;
 	}
 	
+	/**
+	 * 将计算所需参数打包为double[]
+	 * @return 打包结果
+	 */
 	public double[] packParam() {
 		return new double[]{ lxx, lyy, rix, riy, rox, roz, rrx, rry, theta };
 	}
 	
+	/**
+	 * 保存计算参数
+	 * @param param 参数
+	 */
 	public void storeParam(double[] param) {
 		lxx = param[0];
 		lyy = param[1];
@@ -529,6 +551,11 @@ class CalculateModule {
 				+ "; rox: " + rox + "; roz: " + roz + "; rrx: " + rrx + "; rry: " + rry + "; theta: " + theta + ";\n");
 	}
 	
+	/**
+	 * 单个的配平计算
+	 * @param d 对应的DisplayModule，即对应的x或y轴
+	 * @return 计算结果
+	 */
 	private double calcPart(DisplayModule d) {
 		List<Double> data = d.dataAll();
 		int[] cnt = d.dataGroup();

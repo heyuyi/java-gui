@@ -22,7 +22,8 @@ import javax.swing.SwingUtilities;
 import serialcom.SerialCom;
 
 /**
- * DisplayModule类为数据显示模块
+ * DisplayModule类为数据显示模块，包含一个CurveChart，一组JButton等。
+ * 主要用于曲线图的显示和串口数据的采集
  * @author heyuyi
  *
  */
@@ -67,13 +68,13 @@ class DisplayModule extends JPanel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				SwingUtilities.invokeLater(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						if (com.dataValid() && display) {
-							String str = com.read();
+				if (com.dataValid()) {
+					SwingUtilities.invokeLater(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							String str = com.readData();
 							txt.setText(str);
 							String[] ss = str.split(" ");
 							String s = ss[0];
@@ -89,8 +90,8 @@ class DisplayModule extends JPanel {
 								System.err.println(str);
 							}
 						}
-					}
-				});	
+					});
+				}
 			}
 		}
 	};
@@ -303,7 +304,7 @@ class DisplayModule extends JPanel {
 	}
 	
 	/**
-	 * 返回模块采集到的所有数据
+	 * 返回模块记录的所有数据
 	 * @return 返回数据
 	 */
 	public List<Double> dataAll() {
@@ -319,7 +320,7 @@ class DisplayModule extends JPanel {
 	}
 	
 	/**
-	 * 清楚用户所选取的点集
+	 * 清除用户所选取的点集
 	 */
 	public void clearSelectData() {
 		chart.clearOverlay();

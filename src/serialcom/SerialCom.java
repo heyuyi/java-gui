@@ -17,11 +17,15 @@ import java.io.OutputStream;
 import java.util.TooManyListenersException;
 
 /**
- * @author zc
+ * SerialCom类为串口读取数据实现
+ * @author heyuyi
  *
  */
 public class SerialCom implements SerialPortEventListener {
 
+	/**
+	 * SerialCom类成员
+	 */
 	private OutputStream os;
     private InputStream is;
     private CommPortIdentifier portId;
@@ -30,16 +34,27 @@ public class SerialCom implements SerialPortEventListener {
     private boolean isOpen = false;
     private StringBuffer sbuf = new StringBuffer();
     private String data;
-    private boolean valid = false;
+    private volatile boolean valid = false;
     
+    /**
+	 * SerialCom类构造函数
+	 * @param comn 串口名
+	 */
 	public SerialCom(String comn) {
 		comName = comn;
 	}
 	
+	/**
+	 * 返回串口名
+	 * @return 串口名
+	 */
 	public String name() {
 		return comName;
 	}
 	
+	/**
+	 * 打开串口
+	 */
 	public void open() throws Exception {
 		try {
 			portId = CommPortIdentifier.getPortIdentifier(comName);
@@ -77,6 +92,9 @@ public class SerialCom implements SerialPortEventListener {
 		valid = false;
 	}
 
+	/**
+	 * 关闭串口
+	 */
 	public void close() throws IOException {
 		if (!isOpen) {
 			return;
@@ -94,6 +112,10 @@ public class SerialCom implements SerialPortEventListener {
 		isOpen = false;
 	}
 	
+	/**
+	 * 串口发送指令
+	 * @param cmd 指令
+	 */
 	public void sendCommand(byte cmd){
     	byte[] temp = { 0x1b, cmd, 0x0d, 0x0a };
     	try {
@@ -104,24 +126,44 @@ public class SerialCom implements SerialPortEventListener {
 		}
     }
 	
+	/**
+	 * 检查是否有了有效数据
+	 * @param cmd 指令
+	 */
 	public boolean dataValid() {
 		return valid;
 //		valid = true;
 //		return true;
 	}
 	
-	public String read() {
+	/**
+	 * 返回有效数据
+	 * @return 返回数据
+	 */
+	public synchronized String readData() {
 		if (valid) {
 			valid = false;
 //			Random random = new Random();
 //			String str = "+   1"+"."+(random.nextInt(9))+(random.nextInt(9))
 //					+(random.nextInt(9))+(random.nextInt(9))+" g  ";
-//			return str;
+//			return str; 
 			return data;
 		} else
-			return "";
+			return null;
 	}
 	
+	/**
+	 * 写入有效数据
+	 * @param str 写入数据
+	 */
+	public synchronized void writeData(String str) {
+		data = str;
+		valid = true;
+	}
+	
+	/**
+	 * 串口事件
+	 */
 	@Override
 	public void serialEvent(SerialPortEvent e) {
 		// TODO Auto-generated method stub
@@ -145,12 +187,11 @@ public class SerialCom implements SerialPortEventListener {
 					if (newData == -1)
 						break;
 					else if (newData == '\n') {
-	//					sbuf.append((char)newData);
-						data = sbuf.substring(0, sbuf.length());
+//						sbuf.append((char)newData);
+						writeData(sbuf.substring(0, sbuf.length()));
 						sbuf.delete(0, sbuf.length());
-						valid = true;
 					} else {
-						if (newData != '\r')
+						if (newData != '\r'/* && newData != ' '*/)
 							sbuf.append((char)newData);
 					}
 				} catch (IOException e1) {

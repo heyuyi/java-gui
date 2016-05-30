@@ -32,14 +32,16 @@ import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
 
 /**
- * CurveChart类为显示曲线图
+ * CurveChart类为显示曲线图，继承ChartPanel，包含一个JFreeChart，
+ * 显示一副XYLineChart，根据得到的数据动态改变显示的数据。
+ * 使用多个Crosshair，实现用户选取数据点的功能。
  * @author heyuyi
  *
  */
 class CurveChart extends ChartPanel implements ChartMouseListener {
 	
 	/**
-	 * 
+	 * CurveChart类成员
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final int SIZE = 200;
@@ -74,9 +76,12 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 	private int overlayCnt = 0;
 	private boolean IsCollecting = false;
 	
+	/**
+	 * CurveChart类构造函数
+	 */
 	public CurveChart() {
 		super(null, true);
-		chart = createChart(200);
+		chart = createChart();
 		setChart(chart);
 //		setMouseZoomable(false);
 		setPopupMenu(null);
@@ -91,7 +96,11 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 		}
 	}
 	
-	private JFreeChart createChart(int size) {
+	/**
+	 * 创建XYLineChart
+	 * @return 创建的JFreeChart
+	 */
+	private JFreeChart createChart() {
 		JFreeChart chart = ChartFactory.createXYLineChart(null, null, null, 
 				createCollectStatusDataset(), PlotOrientation.VERTICAL, false, false, false);
 		XYPlot plot = chart.getXYPlot();
@@ -109,6 +118,10 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 		return chart;
 	}
 	
+	/**
+	 * 创建数据采集时的Dataset，其中仅200个点
+	 * @return 创建的XYDataset
+	 */
 	private XYDataset createCollectStatusDataset() {
 		XYSeries series = new XYSeries("");		
 		for (int i = 0; i < SIZE; ++i)
@@ -116,6 +129,10 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 		return new XYSeriesCollection(series);
 	}
 	
+	/**
+	 * 创建数据处理时的Dataset，包含了之前记录的所有的点
+	 * @return 创建的XYDataset
+	 */
 	private XYDataset createProcessStatusDataset() {
 		XYSeries series = new XYSeries("");
 		for (int i = 0; i < data.size(); ++i)
@@ -123,6 +140,10 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 		return new XYSeriesCollection(series);
 	}
 	
+	/**
+	 * 增加一条采集的数据
+	 * @param y 采集到的数据
+	 */
 	public void addData(double y) {
 		for (int i = 0; i < (SIZE-1); ++i)
 			queue[i] = queue[i+1];
@@ -133,6 +154,9 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 			data.add(y);
 	}
 	
+	/**
+	 * 清图函数
+	 */
 	public void clear() {
 		IsCollecting = false;
 		data.clear();
@@ -141,12 +165,18 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 //		chart.getXYPlot().setDataset(createCollectStatusDataset());
 	}
 	
+	/**
+	 * 开始数据记录
+	 */
 	public void collect() {
 		IsCollecting = true;
 		for (int i = 0; i < SIZE; ++i)
 			data.add(queue[i]);
 	}
 	
+	/**
+	 * 设置数据采集状态
+	 */
 	public void dataCollectStatus() {
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		removeChartMouseListener(this);
@@ -155,6 +185,9 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 		overlayCnt = 0;
 	}
 	
+	/**
+	 * 设置数据处理状态
+	 */
 	public void dataProcessStatus() {
 		restoreAutoBounds();
 		chart.getXYPlot().setDataset(createProcessStatusDataset());
@@ -172,6 +205,10 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
         addChartMouseListener(this);
 	}
 	
+	/**
+	 * 返回数据处理时用户选取的点集
+	 * @return 点集
+	 */
 	public int[] dataGroup() {
 		int[] dg = new int[overlayCnt];
 		for (int i = 0; i < overlayCnt; ++i)
@@ -179,10 +216,17 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 		return dg;
 	}
 	
+	/**
+	 * 返回模块记录的所有数据
+	 * @return 返回数据
+	 */
 	public List<Double> dataAll() {
 		return data;
 	}
 	
+	/**
+	 * 清除用户所选取的点集
+	 */
 	public void clearOverlay() {
 		XYPlot plot = chart.getXYPlot();
 		double x = Double.NaN;
@@ -195,6 +239,9 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
         overlayCnt = 0;
 	}
 	
+	/**
+	 * 鼠标按键响应函数
+	 */
 	@Override
 	public void chartMouseClicked(final ChartMouseEvent e) {
 		// TODO Auto-generated method stub
@@ -227,6 +274,9 @@ class CurveChart extends ChartPanel implements ChartMouseListener {
 		});
 	}
 
+	/**
+	 * 鼠标移动响应函数
+	 */
 	@Override
 	public void chartMouseMoved(final ChartMouseEvent e) {
 		// TODO Auto-generated method stub

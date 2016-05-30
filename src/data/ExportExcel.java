@@ -23,15 +23,23 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
+ * ExportExcel类将记录的数据以excel文件的形式导出
  * @author heyuyi
  *
  */
 public class ExportExcel {
 	
+	/**
+	 * ExportExcel类成员
+	 */
 	private static String dirBuf = ".";
 	private String dir = null;
 	private boolean flag;
 	
+	/**
+	 * ExportExcel类构造函数，产生一个用于选择保存路径和设置文件名的对话框，
+	 * 默认文件名为当前时间，会自动记录上次的保存路径。
+	 */
 	public ExportExcel() {
 		// TODO Auto-generated constructor stub
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
@@ -74,6 +82,10 @@ public class ExportExcel {
 		}
 	}
 	
+	/**
+	 * 数据点导出数据
+	 * @param l1，l2 数据点集
+	 */
 	public void export(List<Double> l1, List<Double> l2) {
 		if (!flag)
 			return;
@@ -115,6 +127,11 @@ public class ExportExcel {
 		}
 	}
 	
+	/**
+	 * 获取TextFiel，用于设置保存对话框的默认文件名
+	 * @param c
+	 * @return 返回TextFiel
+	 */
 	private JTextField getTextField(Container c) {
         JTextField textField = null;
         for (int i = 0; i < c.getComponentCount(); i++) {
