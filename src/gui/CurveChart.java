@@ -32,6 +32,7 @@ import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
 
 /**
+ * CurveChart类为显示曲线图
  * @author heyuyi
  *
  */
