@@ -481,7 +481,7 @@ class CalculateModule {
 		 * TextPanel类成员
 		 */
 		private static final long serialVersionUID = 1L;
-		private JTextArea tArea = new JTextArea();
+		private JTextArea tArea = new JTextArea(10, 30);
 		
 		/**
 		 * TextPanel类构造函数
